@@ -5,6 +5,7 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import sphinx_rtd_theme
 
 project = 'Circuit-based SAT Solver'
 copyright = '2024, 2024, Zhufei Chu (Ningbo Univ., China)'
@@ -14,7 +15,7 @@ release = '0.1'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = ['sphinx_rtd_theme',]
 
 templates_path = ['_templates']
 exclude_patterns = []
