@@ -12,4 +12,4 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 #绝对路径写法：include_directories(${CMAKE_SOURCE_DIR/include}),#CMAKE_SOURCE_DIR等价于根目录
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(run main.cpp src/parser.cpp src/solver.cpp src/aig.cpp)
+add_executable(cirsat main.cpp src/parser.cpp src/solver.cpp src/aig.cpp)

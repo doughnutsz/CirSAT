@@ -1,6 +1,6 @@
 #File
 .vscode/
-_build/
+build/
 script/
 
 # Prerequisites
