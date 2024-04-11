@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import sphinx_rtd_theme
 
-project = 'Circuit-based SAT Solver'
+project = 'CirSAT'
 copyright = '2024, 2024, Zhufei Chu (Ningbo Univ., China)'
 author = '2024, Zhufei Chu (Ningbo Univ., China)'
 release = '0.1'
