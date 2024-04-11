@@ -8,7 +8,7 @@
 import sphinx_rtd_theme
 
 project = 'CirSAT'
-copyright = '2024, 2024, Zhufei Chu (Ningbo Univ., China)'
+copyright = '2024, Zhufei Chu (Ningbo Univ., China)'
 author = '2024, Zhufei Chu (Ningbo Univ., China)'
 release = '0.1'
 
