@@ -1,5 +1,5 @@
 # A circuit-based SAT solver (CirSAT)
-CirSAT is designed for combinational equivalence checking, based on the isomorphic logic network And Inverter Graph(AIG)
+CirSAT is designed for Electronic Design Automation (EDA), based on the isomorphic logic network And Inverter Graph (AIG)
 
 ## Requirements
 A modern compiler is required to build the libraries. 

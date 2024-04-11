@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Circuit-based SAT Solver's documentation!
+Welcome to CirSAT's documentation!
 ====================================================
 
 .. toctree::
@@ -12,9 +12,4 @@ Welcome to Circuit-based SAT Solver's documentation!
 
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   about
