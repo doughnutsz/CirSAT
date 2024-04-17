@@ -35,7 +35,7 @@ public:
   solver() = delete;
   solver(const AigGraph& graph, solver_parameter par = {});
   Stats run();
-  void show_result(const AigGraph& graph, Stats);
+  void ShowResult(const AigGraph& graph, Stats);
 
 public:
 struct DecInfor
@@ -53,7 +53,7 @@ private:
   uint8_t IndirectImplication(std::vector<uint32_t>& watch_list, const int& n, std::vector<uint32_t> &bcp_vec, const int idx);
   uint8_t LIndirectImplication(std::vector<uint32_t>& watch_list, const int& n, std::vector<uint32_t> &bcp_vec, const int idx); 
   uint32_t FindDecisionTarget();
-  void update_learnt_gate(const uint32_t trace_line); 
+  void UpdateLearntGate(const uint32_t trace_line); 
   void UpdateActive(); 
   void CancelAssignment(const uint32_t dec_level);
   void FindSecondDecisionLevel();

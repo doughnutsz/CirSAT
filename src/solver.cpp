@@ -65,7 +65,7 @@ solver::solver(const AigGraph& graph, solver_parameter par) : m_graph(graph), m_
   }
 }
 
-void solver::show_result(const AigGraph& graph, Stats run_result) {
+void solver::ShowResult(const AigGraph& graph, Stats run_result) {
   if (run_result == Stats::SAT) {
     std::cout << "SAT" << std::endl;
 
@@ -109,7 +109,7 @@ Stats solver::run()
   result = BCP();
   if (result == Stats::BCPCON)
   {
-    show_result(m_graph,Stats::UNSAT);
+    ShowResult(m_graph,Stats::UNSAT);
     return Stats::UNSAT;
   }
 
@@ -119,7 +119,7 @@ Stats solver::run()
     
     if(Dec == 0xffffffff)
     {
-      show_result(m_graph,Stats::SAT);
+      ShowResult(m_graph,Stats::SAT);
       return Stats::SAT;
     }
     while(1)
@@ -134,12 +134,12 @@ Stats solver::run()
         result = ConflictAnalysisAndBacktrack();
         if(result == Stats::UNSAT)
         {
-          show_result(m_graph,result);
+          ShowResult(m_graph,result);
           return Stats::UNSAT;
         }
         if(result == Stats::UNKNOWN)
         {
-          show_result(m_graph,result);
+          ShowResult(m_graph,result);
           return Stats::UNKNOWN;
         }
       }
@@ -534,7 +534,7 @@ Stats solver::ConflictAnalysisAndBacktrack()
 
     if (m_val_info[trace_line].m_source.size() != 0) 
     {
-      update_learnt_gate(trace_line);
+      UpdateLearntGate(trace_line);
       if (m_conf_lines.size() == 0) 
       {
         // std::cout<<"sover.cpp 536"<<std::endl;
@@ -637,7 +637,7 @@ void solver::DeleteNodeToJf(const GateId& n, const int DevLev)
   mdi.at(DevLev).j_nodes.erase(n);
 }
 
-void solver::update_learnt_gate(const uint32_t trace_line)
+void solver::UpdateLearntGate(const uint32_t trace_line)
 {
   // find trace_line's source lines
   std::vector<GateId> trace_gate(m_val_info[trace_line].m_source);
