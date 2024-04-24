@@ -1,4 +1,5 @@
 #include "../include/parser.h"
+#include "../include/solver.h"
 bool Parser::parse(std::istream& is, AigGraph& graph)
 {
 	int line_ctr = 0;

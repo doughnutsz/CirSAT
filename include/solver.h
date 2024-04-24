@@ -1,10 +1,11 @@
 #include "aig.h"
 #include <algorithm>
+#include <time.h>
 
 #define HAVE_NO_LEVEL 0xffffffff
 struct solver_parameter
 {
-  uint32_t conflict_num = 200000;
+  uint32_t conflict_num = 100000;
 };
 
 enum class Stats{ 
@@ -34,8 +35,8 @@ public:
 public:
   solver() = delete;
   solver(const AigGraph& graph, solver_parameter par = {});
-  Stats run();
-  void ShowResult(const AigGraph& graph, Stats);
+  Stats run(int &ConfLimit, int &Verbose);
+  void ShowResult(const AigGraph& graph, Stats, int&);
 
 public:
 struct DecInfor
@@ -57,9 +58,11 @@ private:
   void UpdateActive(); 
   void CancelAssignment(const uint32_t dec_level);
   void FindSecondDecisionLevel();
+
 private:
   void AddNodeToJf(const GateId& n, const int DevLev);
   void DeleteNodeToJf(const GateId& n, const int DevLev);
+  
 
 private:
   const AigGraph& m_graph;
@@ -76,6 +79,9 @@ private:
 
   uint32_t m_confict_nums = 0;
   uint32_t m_decision_nums = 0;
-  
   uint32_t m_cur_level = 0;
+
+  clock_t bcp_time = 0, solve_time = 0, conflict_time = 0, parser_time = 0;
+
+  
 };

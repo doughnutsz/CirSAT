@@ -40,12 +40,12 @@ GateId AigGraph::add_gate(const uint32_t &output, const uint32_t &input1, const 
 
 void AigGraph::printf_graph()
 {
-  // std::cout << "aag " << get_numG() << " " << get_numPI() << " " << "0 " << get_numPO() << " " 
-  //           <<  get_numG() - get_numPI() << std::endl;
-  // for(const auto& pi : m_inputs)
-  //   std::cout << (m_gates[pi].get_id() + 1) * 2 << std::endl;
-  // for(const auto& po : m_outputs)
-  //   std::cout << (m_gates[po].get_id() + 1) * 2 + int(m_gates[po].get_outputs()[0] == HAVE_INV) << std::endl;   
+  std::cout << "aag " << get_numG() << " " << get_numPI() << " " << "0 " << get_numPO() << " " 
+            <<  get_numG() - get_numPI() << std::endl;
+  for(const auto& pi : m_inputs)
+    std::cout << (m_gates[pi].get_id() + 1) * 2 << std::endl;
+  for(const auto& po : m_outputs)
+    std::cout << (m_gates[po].get_id() + 1) * 2 + int(m_gates[po].get_outputs()[0] == HAVE_INV) << std::endl;   
   int fan0 = 0;
   for(const auto& gate : m_gates)
   {
@@ -55,8 +55,8 @@ void AigGraph::printf_graph()
     }
   }
   std::cout <<"fan0 = "<<fan0<< std::endl;
-  // for(const auto& po : m_outputs)
-  // {
-  //   std::cout << m_gates[po].get_inputs().size() << std::endl;
-  // }
+  for(const auto& po : m_outputs)
+  {
+    std::cout << m_gates[po].get_inputs().size() << std::endl;
+  }
 }

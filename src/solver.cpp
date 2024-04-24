@@ -1,4 +1,5 @@
 #include "../include/solver.h"
+#include "../include/aig.h"
 
 solver::solver(const AigGraph& graph, solver_parameter par) : m_graph(graph), m_par(par)
 {
@@ -65,34 +66,51 @@ solver::solver(const AigGraph& graph, solver_parameter par) : m_graph(graph), m_
   }
 }
 
-void solver::ShowResult(const AigGraph& graph, Stats run_result) {
+void solver::ShowResult(const AigGraph& graph, Stats run_result, int& Verbose) {
   if (run_result == Stats::SAT) {
-    std::cout << "SAT" << std::endl;
-
+    std::cout << "SATISFIABLE" << std::endl;
   } 
-  else if (run_result == Stats::UNSAT)
-  {
-    std::cout << "UNSAT" << std::endl;
+  else if (run_result == Stats::UNSAT){
+    std::cout << "UNSATISFIABLE" << std::endl;
   }
-  else
-  {
+  else{
     std::cout << "UNKNOWN" << std::endl;
   }
-  std::cout<<"decision_nums: "<<m_decision_nums<<std::endl;
-  std::cout<<"confict_nums: "<<m_confict_nums<<std::endl;
-  // for(int i = 0; i < m_val_info.size(); i++)
-  // {
-  //   std::cout<<i<<", m_val = "<<int(m_val_info[i].m_val)<<", m_level = "<<m_val_info[i].m_level<<", m_active_value = "<<m_val_info[i].m_active_value<<", m_source = ";
-  //   for(auto temp1 : m_val_info[i].m_source)
-  //   {
-  //     std::cout<<int(temp1)<<" ";
-  //   }
-  //   std::cout<<std::endl;
-  // }
+  std::cout<<"CPU time: "<<1.0 * (solve_time)/1000<< "  ms" << std :: endl;
+  std::cout<<"decisions: "<<m_decision_nums<<std::endl;
+  std::cout<<"conficts: "<<m_confict_nums<<std::endl;
+  if(Verbose == 1){
+    std::cout<<"============================[ Problem Statistics ]====================================="<<"\n";
+    std::cout<<"|   "<<"BCP time: "<<1.0 * (bcp_time)/1000<<"  ms                                       "<<"\n";
+    std::cout<<"|   "<<"ConflictAnalyze time: "<<1.0 * (conflict_time)/1000<<"  ms                      "<<"\n";
+    std::cout<<"|   "<<"PIs: "<<m_graph.get_inputs().size()<<"                                         "<<"\n";
+    std::cout<<"|   "<<"Gates: "<<m_graph.get_inputs().size()<<"                                       "<<"\n";
+    std::cout<<"|   ";
+    for(int i = 0 ; i < m_graph.get_inputs().size(); i++){
+      if(i % 8 ==0 && i != 0) {
+        std::cout<<"  "<<std::endl;
+        std::cout<<"|   ";
+      }
+      std::cout<<"pi"<<m_graph.get_inputs()[i]<<" = "<<int(m_val_info[m_graph.get_inputs()[i]].m_val)<<"; ";
+    }
+
+    std::cout<<std::endl;
+    std::cout<<"======================================================================================="<<std::endl;
+    // for(int i = 0; i < m_val_info.size(); i++){
+    //   std::cout<<i<<", m_val = "<<int(m_val_info[i].m_val)<<", m_level = "<<m_val_info[i].m_level<<", m_active_value = "<<m_val_info[i].m_active_value<<", m_source = ";
+    //   for(auto temp1 : m_val_info[i].m_source){
+    //     std::cout<<int(temp1)<<" ";
+    //   }
+    //   std::cout<<std::endl;
+    // }
+  }
 }
 
-Stats solver::run()
+Stats solver::run(int &ConfLimit, int &Verbose)
 {
+  clock_t begin, end, bcp_begin, bcp_end, conflict_begin, confict_end;
+  begin = clock();
+  m_par.conflict_num = ConfLimit;
   const GateId root = m_graph.get_outputs()[0];
   // m_val_info[root].m_val = 1 - m_val_info[root].m_watch_value[0];
   m_val_info[root].m_val = 1;
@@ -106,40 +124,57 @@ Stats solver::run()
   mdi[0].assigned_in_level.push_back(root);
   
   Stats result;
+  bcp_begin = clock();
   result = BCP();
+  bcp_end = clock();
+  bcp_time += (bcp_end - bcp_begin);
   if (result == Stats::BCPCON)
   {
-    ShowResult(m_graph,Stats::UNSAT);
+    end = clock();
+    solve_time = (end - begin);
+    ShowResult(m_graph, Stats::UNSAT, Verbose);
     return Stats::UNSAT;
   }
 
   while(1)
   {
     uint32_t Dec = FindDecisionTarget();
-    
+
     if(Dec == 0xffffffff)
     {
-      ShowResult(m_graph,Stats::SAT);
+      end = clock();
+      solve_time = (end - begin);
+      ShowResult(m_graph, Stats::SAT, Verbose);
       return Stats::SAT;
     }
     while(1)
     {
+      bcp_begin = clock();
       result = BCP();
+      bcp_end = clock();
+      bcp_time += (bcp_end - bcp_begin);
       if(result == Stats::BCPSAT)
       {
         break;
       }
       else
       {
+        conflict_begin = clock();
         result = ConflictAnalysisAndBacktrack();
+        confict_end = clock();
+        conflict_time += (confict_end - conflict_begin);
         if(result == Stats::UNSAT)
         {
-          ShowResult(m_graph,result);
+          end = clock();
+          solve_time = (end - begin);
+          ShowResult(m_graph, result, Verbose);
           return Stats::UNSAT;
         }
         if(result == Stats::UNKNOWN)
         {
-          ShowResult(m_graph,result);
+          end = clock();
+          solve_time = (end - begin);
+          ShowResult(m_graph, result, Verbose);
           return Stats::UNKNOWN;
         }
       }
